@@ -1,25 +1,31 @@
 ﻿using System;
 using UnityEngine;
-    public enum TypeOfTrait
-    {
-        Negative,
-        Positive
-    }
-    public enum RarityOfTrait
-    {
-        Common,
-        Uncommon,
-        Rare,
-        Epic,
-        Legendary
-    }
 
+public enum TypeOfTrait
+{
+    Negative,
+    Positive
+}
+
+public enum RarityOfTrait
+{
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary
+}
+
+public enum CategoryOfTrait
+{
+    Kimoi,
+    Grotesque,
+}
 
 [Serializable]
 [CreateAssetMenu(fileName = "Trait", menuName = "Trait")]
 public class Trait : ScriptableObject
 {
-
     [SerializeField]
     private int traitID;
 
@@ -33,20 +39,26 @@ public class Trait : ScriptableObject
     private RarityOfTrait kindOfRare;
 
     [SerializeField]
+    private CategoryOfTrait kindOfCategory;
+
+    [SerializeField]
     private float traitEnergy;
 
     [SerializeField]
     private float traitBaseValue;
 
     [SerializeField]
-    private float traitValueStretch;
+    private float traitValueStretch;//いらない説
 
     [SerializeField]
     private float traitValueVolatility;
 
+    [SerializeField]
+    private float traitOscillationFrequency;
 
     [SerializeField]
     private string information;
+
     /*
     - カード
   - ニンゲンが生まれ持った能力や機会
@@ -68,6 +80,7 @@ public class Trait : ScriptableObject
     - レア度
       - コレクターに高く売れる
       */
+
     public int GettraitID()
     {
         return traitID;
@@ -82,29 +95,41 @@ public class Trait : ScriptableObject
     {
         return kindOfTrait;
     }
+
     public RarityOfTrait GetRarityOfTrait()
     {
         return kindOfRare;
     }
 
+    public CategoryOfTrait GetCategoryOfTrait()
+    {
+        return kindOfCategory;
+    }
 
     public float GetTraitEnergy()
     {
         return traitEnergy;
     }
+
     public float GetTraitBaseValue()
     {
         return traitBaseValue;
     }
+
     public float GetTraitValueVolatility()
     {
         return traitValueVolatility;
     }
+
     public float GetTraitValueStretch()
     {
         return traitValueStretch;
     }
 
+    public float GetTraitOscillationFrequency()
+    {
+        return traitOscillationFrequency;
+    }
 
     public string GetInformation()
     {

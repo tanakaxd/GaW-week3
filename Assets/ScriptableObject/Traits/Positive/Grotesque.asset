@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traitID: 1
   traitName: Grotesque
-  kindOfTrait: 1
-  kindOfRare: 3
+  type: 1
+  rarity: 3
+  category: 1
   traitEnergy: 100
   traitBaseValue: 120
   traitValueStretch: 5
-  traitValueVolatility: 0.8
+  traitValueVolatility: 1
+  traitOscillationFrequency: 5
   information: monstrous or just a monster!

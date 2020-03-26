@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traitID: 0
   traitName: Kimoi
-  kindOfTrait: 1
-  kindOfRare: 1
+  type: 0
+  rarity: 0
+  category: 0
   traitEnergy: 100
   traitBaseValue: 100
   traitValueStretch: 10
-  traitValueVolatility: 1
+  traitValueVolatility: 3
+  traitOscillationFrequency: 3
   information: you gross!

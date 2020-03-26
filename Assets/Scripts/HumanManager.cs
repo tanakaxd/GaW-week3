@@ -19,7 +19,8 @@ public class HumanManager : MonoBehaviour
         for (int i = 0; i < humen.Count; i++)
         {
             GenerateHuman(humen[i]);
-            //DisplayHuman();
+            humen[i].AnalyzeHuman();
+            // humen[i].DisplayHuman();
 
         }
 
@@ -53,7 +54,7 @@ public class HumanManager : MonoBehaviour
                 break;
             }
 
-            human.traits.Add(traits[Random.Range(0, traits.Count - 1)]);
+            human.traits.Add(traits[Random.Range(0, traits.Count)]);
 
             count++;
 
@@ -72,8 +73,9 @@ public class HumanManager : MonoBehaviour
         {
             NullifyHuman(humen[i]);
             GenerateHuman(humen[i]);
-            //DisplayHuman();
-            
+            humen[i].AnalyzeHuman();
+            //humen[i].DisplayHuman();
+
 
         }
         ActivateAllHumen();
@@ -81,7 +83,7 @@ public class HumanManager : MonoBehaviour
 
     private void NullifyHuman(Human human)
     {
-        human.traits = new List<Trait>();
+        human.InitHuman();
     }
 
     //void DisplayHuman()

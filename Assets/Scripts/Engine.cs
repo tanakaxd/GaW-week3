@@ -1,15 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+
+
 
 public class Engine : MonoBehaviour
 {
     public static Engine instance;
     public int day = 1;
-    public float matter = 1000;
-    public int lifeEnergy = 0;
-    public int sympathy = 0;
-    public int hostility = 10;
     public int playerLevel = 1;
+    public float matter = 1000;
+    public float lifeEnergy = 0;
+    public float sympathy = 0;
+    public float hostility = 10;
+    public bool debug = true;
 
     private EconomyManager economyManager;
     private CardManager cardManager;
@@ -31,12 +35,39 @@ public class Engine : MonoBehaviour
 
         economyManager = GetComponent<EconomyManager>();
         cardManager = GetComponent<CardManager>();
-        societyManager = GetComponent<SocietyManager>();
+        //societyManager = GetComponent<SocietyManager>();
     }
 
     // Start is called before the first frame update
     private void Start()
     {
+        if (debug)
+        {
+            //StartCoroutine(temploop());
+            //Test();
+        }
+    }
+
+    private IEnumerator temploop()
+    {
+        while (true)
+        {
+            societyManager = GameObject.Find("SocietyManager").GetComponent<SocietyManager>();
+            societyManager.OccurSociety();
+            societyManager.PopupSociety();
+            cardManager.UpdateCardsPrice(economyManager.CalculateCurrentPrice());
+            cardManager.ActivateCards();
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    private void Test()
+    {
+        societyManager = GameObject.Find("SocietyManager").GetComponent<SocietyManager>();
+        societyManager.OccurSociety();
+        societyManager.PopupSociety();
+        cardManager.UpdateCardsPrice(economyManager.CalculateCurrentPrice());
+        cardManager.ActivateCards();
     }
 
     // Update is called once per frame
@@ -44,7 +75,7 @@ public class Engine : MonoBehaviour
     {
     }
 
-    //Engineは常に存続し続けるので、start()で何かを呼び出すということができない。
+    //Engineは常に存続し続けるので、シーンの始まりと同時にstart()で何かを呼び出すということができない。
     //あるシーンがロードされたらという処理を追加しておく必要がある
 
     //取引シーンをロードする
@@ -58,10 +89,13 @@ public class Engine : MonoBehaviour
     private void DealSceneLoaded(Scene dealScene, LoadSceneMode mode)
     {
         SceneManager.sceneUnloaded += DealSceneUnloaded;
+        cardManager.GetAllCardScriptsInScene();
+        societyManager = GameObject.Find("SocietyManager").GetComponent<SocietyManager>();
         societyManager.OccurSociety();
         societyManager.PopupSociety();
         cardManager.UpdateCardsPrice(economyManager.CalculateCurrentPrice());
-        cardManager.ActivateCards();
+        cardManager.UpdateAllAmount();
+        //cardManager.ActivateCards();
     }
 
     //取引シーンがアンロードされたら
@@ -69,7 +103,7 @@ public class Engine : MonoBehaviour
     {
         SceneManager.sceneLoaded -= DealSceneLoaded;
         SceneManager.sceneUnloaded -= DealSceneUnloaded;
-        cardManager.DeactivateCards();
+        //cardManager.DeactivateCards();
     }
 
     //Siphonシーンをロードする
@@ -83,7 +117,6 @@ public class Engine : MonoBehaviour
     private void SiphonSceneLoaded(Scene dealScene, LoadSceneMode mode)
     {
         SceneManager.sceneUnloaded += SiphonSceneUnloaded;
-
     }
 
     //Siphonシーンがアンロードされたら

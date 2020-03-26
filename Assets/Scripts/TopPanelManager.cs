@@ -8,6 +8,7 @@ public class TopPanelManager : MonoBehaviour
     public static TopPanelManager instance;
     public GameObject topPanel;
     public TextMeshProUGUI dayText;
+    public TextMeshProUGUI levelText;
     public TextMeshProUGUI lifeEnergyText;
     public TextMeshProUGUI matterText;
     public TextMeshProUGUI sympathyText;
@@ -47,6 +48,7 @@ public class TopPanelManager : MonoBehaviour
     public void UpdateText()
     {
         dayText.text = "Day: "+Engine.instance.day.ToString();
+        levelText.text = "Level: "+Engine.instance.playerLevel.ToString();
         lifeEnergyText.text = "Energy: " + Engine.instance.lifeEnergy.ToString();
         matterText.text = "Matter: " + Engine.instance.matter.ToString() + "₥";
         sympathyText.text = "Sympahty: " + Engine.instance.sympathy.ToString();

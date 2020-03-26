@@ -13,7 +13,7 @@ public enum RarityOfTrait
     Uncommon,
     Rare,
     Epic,
-    Legendary
+    Legendary,
 }
 
 public enum CategoryOfTrait
@@ -33,28 +33,28 @@ public class Trait : ScriptableObject
     private string traitName;
 
     [SerializeField]
-    private TypeOfTrait kindOfTrait;
+    private TypeOfTrait type;
 
     [SerializeField]
-    private RarityOfTrait kindOfRare;
+    private RarityOfTrait rarity;
 
     [SerializeField]
-    private CategoryOfTrait kindOfCategory;
+    private CategoryOfTrait category;
 
     [SerializeField]
     private float traitEnergy;
 
     [SerializeField]
-    private float traitBaseValue;
+    private float traitBaseValue;// 平均初期値: 100
 
     [SerializeField]
     private float traitValueStretch;//いらない説
 
     [SerializeField]
-    private float traitValueVolatility;
+    private float traitValueVolatility; // 平均変化量: 3
 
     [SerializeField]
-    private float traitOscillationFrequency;
+    private float traitOscillationFrequency;　//平均方向持続数: 3
 
     [SerializeField]
     private string information;
@@ -93,17 +93,36 @@ public class Trait : ScriptableObject
 
     public TypeOfTrait GetTypeOfTrait()
     {
-        return kindOfTrait;
+        return type;
     }
 
     public RarityOfTrait GetRarityOfTrait()
     {
-        return kindOfRare;
+        return rarity;
+    }
+    public float GetRarityForFloatValue()
+    {
+        switch (rarity)
+        {
+            case RarityOfTrait.Common:
+                return 1.0f;
+            case RarityOfTrait.Uncommon:
+                return 1.05f;
+            case RarityOfTrait.Rare:
+                return 1.1f;
+            case RarityOfTrait.Epic:
+                return 1.15f;
+            case RarityOfTrait.Legendary:
+                return 1.2f;
+            default:
+                Debug.Log("invalid RarityOfTrait");
+                return 1.0f;
+        }
     }
 
     public CategoryOfTrait GetCategoryOfTrait()
     {
-        return kindOfCategory;
+        return category;
     }
 
     public float GetTraitEnergy()

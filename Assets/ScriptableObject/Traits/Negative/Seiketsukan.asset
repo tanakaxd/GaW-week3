@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traitID: 100
   traitName: Seiketsukan
-  kindOfTrait: 0
-  kindOfRare: 2
+  type: 0
+  rarity: 2
+  category: 0
   traitEnergy: 100
   traitBaseValue: -100
   traitValueStretch: 10
   traitValueVolatility: 1
+  traitOscillationFrequency: 3
   information: you not gross!

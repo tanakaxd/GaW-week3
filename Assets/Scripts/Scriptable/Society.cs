@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
+    public enum Effector
+    {
+        value,
+        volatility,
+        sympathy
+    }
 [Serializable]
 [CreateAssetMenu(fileName = "Society", menuName = "Society")]
 public class Society : ScriptableObject
@@ -13,8 +20,14 @@ public class Society : ScriptableObject
     private string societyName;
 
     [SerializeField]
-    private Trait[] traitInfluenced;//このSocietyが価値を上昇させるTrait
+    private Trait[] traitInfluenced;//このSocietyが影響を与えるTrait
 
+    [SerializeField]
+    private Effector effector;
+
+
+    [SerializeField]
+    private string newsTitle;
     [SerializeField]
     private string information;
 
@@ -30,9 +43,18 @@ public class Society : ScriptableObject
     {
         return societyName;
     }
+    public Effector GetEffector()
+    {
+        return effector;
+    }
     public string GetInformation()
     {
         return information;
+    }
+
+    public string GetNewsTitle()
+    {
+        return newsTitle;
     }
 
     public Trait[] GetTraitInfluenced()
@@ -44,4 +66,16 @@ public class Society : ScriptableObject
     //{
     //    influence.Apply();
     //}
+    public List<string> GetNewsDescription()
+    {
+        List<string> texts = new List<string>();
+        foreach(Trait trait in traitInfluenced)
+        {
+            string text = "";
+            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Increases its Value in the Anoma";
+            texts.Add(text);
+        }
+        
+        return texts;
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+    //カードを存続させるとUIの取得が面倒
+    //カードを存続させないと過去の価格などがキープできない
 public class CardManager : MonoBehaviour
 {
     public static CardManager instance;
@@ -11,11 +13,18 @@ public class CardManager : MonoBehaviour
     private List<Card> cards = new List<Card>();
     private List<Trait> traits;
 
-    private Dictionary<Card, int> amountOfCardsInInventory = new Dictionary<Card, int>();
+    private Dictionary<Trait, int> amountOfCardsInInventory = new Dictionary<Trait, int>();
+
+    #region event
+    public delegate void OnCardAmountChange();
+    public event OnCardAmountChange onCardAmountChange;
+    #endregion
+
+
 
     private void Awake()
     {
-        Debug.Log("Inventory Manager Awake called");
+        //Debug.Log("Inventory Manager Awake called");
 
         if (instance == null)
         {
@@ -26,14 +35,15 @@ public class CardManager : MonoBehaviour
             Destroy(gameObject);
         }
         //DontDestroyOnLoad(gameObject);
+        traits = new List<Trait>(traitDataBase.GetTraitLists());
+        onCardAmountChange+= UpdateSympathy;
+        InitInventory();
     }
 
     // Start is called before the first frame update
     private void Start()
     {
-        traits = new List<Trait>(traitDataBase.GetTraitLists());
-
-        InitInventory();
+        //onCardAmountChange+= TopPanelManager.instance.UpdateText;
     }
 
     // Update is called once per frame
@@ -42,6 +52,15 @@ public class CardManager : MonoBehaviour
     }
 
     private void InitInventory()
+    {
+        foreach (Trait trait in traits)
+        {
+            amountOfCardsInInventory[trait] = 0;
+        }
+    }
+    
+   
+    public void GetAllCardScriptsInScene() //hierarchy上のカードオブジェクトのスクリプトをすべて取得
     {
         foreach (Trait trait in traits)
         {
@@ -54,26 +73,8 @@ public class CardManager : MonoBehaviour
             {
                 cards.Add(card);
             }
-
-        }
-
-        cards.ForEach((card) =>
-        {
-            amountOfCardsInInventory[card] = 0;
-        });
-    }
-    /*
-    public void ReloadInventory()
-    {
-        foreach(Card card in cards)
-        {
-            foreach(Trait trait in traits)
-            {
-                if(card.)
-            }
         }
     }
-    */
 
     public void ActivateCards()
     {
@@ -97,54 +98,90 @@ public class CardManager : MonoBehaviour
 
         if (Engine.instance.matter >= card.BuyoutPrice)
         {
-            amountOfCardsInInventory[card] += amount;
-            card.UpdateAmount(amount);
+            amountOfCardsInInventory[card.trait] += amount;
+            card.ChangeAmount(amount);
             Engine.instance.matter -= card.BuyoutPrice;
-            TopPanelManager.instance.UpdateText();
+            onCardAmountChange();
             Debug.Log("buyout!");
 
         }
-        foreach (KeyValuePair<Card, int> keyValuePair in amountOfCardsInInventory)
-        {
-            Debug.Log(keyValuePair.Key + ":" + keyValuePair.Value);
-        }
+        //foreach (KeyValuePair<Trait, int> keyValuePair in amountOfCardsInInventory)
+        //{
+        //    Debug.Log(keyValuePair.Key + ":" + keyValuePair.Value);
+        //}
     }
 
     public void MinusCardAmount(Card card, int amount)
     {
         if (card.amountOwned >= 1)
         {
-            amountOfCardsInInventory[card] -= amount;
-            card.UpdateAmount(-amount);
+            amountOfCardsInInventory[card.trait] -= amount;
+            card.ChangeAmount(-amount);
             Engine.instance.matter += card.SellPrice;
-            TopPanelManager.instance.UpdateText();
+            onCardAmountChange();
         }
-        foreach (KeyValuePair<Card, int> keyValuePair in amountOfCardsInInventory)
+        //foreach (KeyValuePair<Trait, int> keyValuePair in amountOfCardsInInventory)
+        //{
+        //    Debug.Log(keyValuePair.Key + ":" + keyValuePair.Value);
+        //}
+    }
+
+    public void SiphonHumanTraitsToCard(List<Trait> newTraits)
+    {
+        List<Trait> keys = new List<Trait>(amountOfCardsInInventory.Keys);
+
+        foreach (Trait newTrait in newTraits)
         {
-            Debug.Log(keyValuePair.Key + ":" + keyValuePair.Value);
+            foreach(Trait trait in keys)
+            {
+                if(trait.GetTraitName()== newTrait.GetTraitName())
+                {
+                    amountOfCardsInInventory[trait]++;
+                    onCardAmountChange();
+                    Debug.Log(trait.GetTraitName());
+                    Debug.Log(amountOfCardsInInventory[trait]);
+                }
+
+            }
         }
     }
 
-    public void SiphonHumanTriatsToCard(List<Trait> newTraits)
+    public void UpdateCardsPrice(Dictionary<Trait,float> currentPrice)//最新の価格に反映して、過去のデータも与える
     {
-        List<Card> cardAsKey = new List<Card>(amountOfCardsInInventory.Keys);
+        Debug.Log("UpdateCardsPrice");
 
-        foreach (Trait trait in newTraits)
+        foreach (Card card in cards)
         {
-            foreach (Card card in cardAsKey)
+            foreach(Trait trait in traits)
             {
-                if(trait.GetTraitName()== card.gameObject.name)
+                if (card.gameObject.name == trait.GetTraitName())
                 {
-                    amountOfCardsInInventory[card]++;
-                    Debug.Log(card.name);
-                    Debug.Log(amountOfCardsInInventory[card]);
+                    card.UpdatePrice(currentPrice[trait]);
+                    card.SetPriceHistory(EconomyManager.instance.pastPrice[trait]);
+                    Debug.Log("UpdateCardsPrice");
                 }
             }
         }
     }
 
-    public void UpdateCardsPrice(Dictionary<Trait,float> currentPrice)
+    public void UpdateAllAmount()
     {
+        foreach(Card card in cards)
+        {
+            card.UpdateAmount(amountOfCardsInInventory[card.trait]);
+        }
+        onCardAmountChange();
+    }
 
+    public void UpdateSympathy()
+    {
+        float sympathyPoint = 0;
+        foreach(Trait trait in traits)
+        {
+            sympathyPoint += amountOfCardsInInventory[trait] * EconomyManager.instance.currentPrice[trait];
+        }
+
+        Engine.instance.sympathy = sympathyPoint;
+        TopPanelManager.instance.UpdateText();
     }
 }

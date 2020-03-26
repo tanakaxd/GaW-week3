@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,16 +11,15 @@ public class Card : MonoBehaviour
     public GameObject dealPanel;
     public TextMeshProUGUI dealPanelDescription;
 
-    //public DealPanelManager dealPanelManager;
     public Button buyButton;
     public Button sellButton;
     public Button closeButton;
 
-    [HideInInspector] public float currentPrice = 100;
+    [HideInInspector] public float currentPrice = 100; //=Sympathy
     private float buyoutModifier = 1.1f;
     private float sellModifier = 0.9f;
-    public float BuyoutPrice { get { return currentPrice * buyoutModifier; } }
-    public float SellPrice { get { return currentPrice * sellModifier; } }
+    public float BuyoutPrice { get { return currentPrice * buyoutModifier * trait.GetRarityForFloatValue(); } }
+    public float SellPrice { get { return currentPrice * sellModifier * trait.GetRarityForFloatValue(); } }
     private List<float> pastPrices = new List<float>();
 
     //private float yesterdayPrice;
@@ -27,10 +27,12 @@ public class Card : MonoBehaviour
     [HideInInspector]
     public int amountOwned = 0;
 
+
+
+
     // Start is called before the first frame update
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
         Display();
     }
 
@@ -41,18 +43,21 @@ public class Card : MonoBehaviour
 
     public void Display()
     {
-        string text = trait.GetTraitName() + "\n" + trait.GetRarityOfTrait() + "\n";
+        string text = trait.GetTraitName() + "\n" + Enum.GetName(typeof(RarityOfTrait), trait.GetRarityOfTrait()) + "\n";
         text += currentPrice + "\n" + "amount: " + amountOwned;
         description.text = text;
     }
 
     public void DisplayDetail()
     {
-        string text = "Card Name: " + trait.GetTraitName() + "\n" + "Rarity: " + trait.GetRarityOfTrait() + "\n";
-        text += "Current Price: " + currentPrice;
+        string text = "Card Name: " + trait.GetTraitName() + "\n" + "Rarity: " + trait.GetRarityOfTrait().ToString() + "\n";
+        text += "Current Price: " + currentPrice + "\n" + "Buy Price: " + BuyoutPrice + "\n" + "Sell Price: " + SellPrice;
         //+ "\n" + "昨日の価格: " + pastPrices[pastPrices.Count]
         //+ "\n" + "おとといの価格: " + pastPrices[pastPrices.Count] + "\n";
         dealPanelDescription.text = text;
+
+        //Debug.DrawLine()グラフが書ける？Updateでフレームごとに呼ぶ必要あり
+
 
         RegisterDeal();
         RegisterClose();
@@ -69,6 +74,12 @@ public class Card : MonoBehaviour
     }
 
     public void UpdateAmount(int amount)
+    {
+        amountOwned = amount;
+        Display();
+    }
+
+    public void ChangeAmount(int amount)
     {
         if (amountOwned + amount >= 0)
         {
@@ -109,5 +120,13 @@ public class Card : MonoBehaviour
             buyButton.onClick.RemoveAllListeners();
             sellButton.onClick.RemoveAllListeners();
         });
+    }
+
+    public void SetPriceHistory(List<float> priceHistory)
+    {
+
+       pastPrices = priceHistory;
+            
+        
     }
 }

@@ -42,10 +42,13 @@ public class Trait : ScriptableObject
     private CategoryOfTrait category;
 
     [SerializeField]
-    private float traitEnergy;
+    private float traitEnergy;//平均: 10
 
     [SerializeField]
     private float traitBaseValue;// 平均初期値: 100
+
+    [SerializeField]
+    private float traitBaseSympathy;// -100~100
 
     [SerializeField]
     private float traitValueStretch;//いらない説
@@ -120,6 +123,26 @@ public class Trait : ScriptableObject
         }
     }
 
+    public float GetRarityForAppearanceProbability()
+    {
+        switch (rarity)
+        {
+            case RarityOfTrait.Common:
+                return 0.50f;
+            case RarityOfTrait.Uncommon:
+                return 0.25f;
+            case RarityOfTrait.Rare:
+                return 0.15f;
+            case RarityOfTrait.Epic:
+                return 0.08f;
+            case RarityOfTrait.Legendary:
+                return 0.02f;
+            default:
+                Debug.Log("invalid RarityOfTrait");
+                return 1.0f;
+        }
+    }
+
     public CategoryOfTrait GetCategoryOfTrait()
     {
         return category;
@@ -133,6 +156,11 @@ public class Trait : ScriptableObject
     public float GetTraitBaseValue()
     {
         return traitBaseValue;
+    }
+
+    public float GetTraitBaseSympathy()
+    {
+        return traitBaseSympathy;
     }
 
     public float GetTraitValueVolatility()

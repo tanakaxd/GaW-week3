@@ -13,22 +13,20 @@ public class Card : MonoBehaviour
 
     public Button buyButton;
     public Button sellButton;
+    public Button consumeButton;
     public Button closeButton;
 
     [HideInInspector] public float currentPrice = 100; //=Sympathy
-    private float buyoutModifier = 1.1f;
-    private float sellModifier = 0.9f;
-    public float BuyoutPrice { get { return currentPrice * buyoutModifier * trait.GetRarityForFloatValue(); } }
-    public float SellPrice { get { return currentPrice * sellModifier * trait.GetRarityForFloatValue(); } }
+    private float buyoutModifier = 1.01f;
+    private float sellModifier = 0.99f;
+    public float BuyoutPrice { get { return currentPrice * buyoutModifier ; } }//* trait.GetRarityForFloatValue()
+    public float SellPrice { get { return currentPrice * sellModifier ; } }//* trait.GetRarityForFloatValue()
     private List<float> pastPrices = new List<float>();
 
     //private float yesterdayPrice;
     // private float dayBeforeYesterdayPrice;
     [HideInInspector]
     public int amountOwned = 0;
-
-
-
 
     // Start is called before the first frame update
     private void Start()
@@ -50,20 +48,25 @@ public class Card : MonoBehaviour
 
     public void DisplayDetail()
     {
+        MyDebug.List(pastPrices);
         string text = "Card Name: " + trait.GetTraitName() + "\n" + "Rarity: " + trait.GetRarityOfTrait().ToString() + "\n";
-        text += "Current Price: " + currentPrice + "\n" + "Buy Price: " + BuyoutPrice + "\n" + "Sell Price: " + SellPrice;
-        //+ "\n" + "昨日の価格: " + pastPrices[pastPrices.Count]
-        //+ "\n" + "おとといの価格: " + pastPrices[pastPrices.Count] + "\n";
+        text += "Life Energy: " + trait.GetTraitEnergy()+"\n\n";
+        text += "Current Price: " + currentPrice + "\n" + "  Buy Price: " + BuyoutPrice + "\n" + "  Sell Price: " + SellPrice+"\n";
+        int dayBefore = 1;
+        for (int i = pastPrices.Count; i > 0 &&i> pastPrices.Count-3; i--)
+        {
+            text += "\n" + "Price "+dayBefore + " day before: " + pastPrices[i-1];
+            dayBefore++;
+        }
+        //+ "\n" + "Price 2 day before: " + pastPrices[pastPrices.Count-2] + "\n";
         dealPanelDescription.text = text;
 
         //Debug.DrawLine()グラフが書ける？Updateでフレームごとに呼ぶ必要あり
-
 
         RegisterDeal();
         RegisterClose();
 
         dealPanel.SetActive(true);
-
     }
 
     public void UpdatePrice(float price)
@@ -110,6 +113,11 @@ public class Card : MonoBehaviour
         {
             CardManager.instance.MinusCardAmount(this, 1);
         });
+
+        consumeButton.onClick.AddListener(() =>
+        {
+            CardManager.instance.ConsumeCard(this, 1);
+        });
     }
 
     private void RegisterClose()
@@ -119,14 +127,12 @@ public class Card : MonoBehaviour
             dealPanel.SetActive(false);
             buyButton.onClick.RemoveAllListeners();
             sellButton.onClick.RemoveAllListeners();
+            consumeButton.onClick.RemoveAllListeners();
         });
     }
 
     public void SetPriceHistory(List<float> priceHistory)
     {
-
-       pastPrices = priceHistory;
-            
-        
+        pastPrices = priceHistory;
     }
 }

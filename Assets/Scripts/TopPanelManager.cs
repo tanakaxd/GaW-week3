@@ -47,12 +47,12 @@ public class TopPanelManager : MonoBehaviour
 
     public void UpdateText()
     {
-        dayText.text = "Day: "+Engine.instance.day.ToString();
-        levelText.text = "Level: "+Engine.instance.playerLevel.ToString();
-        lifeEnergyText.text = "Energy: " + Engine.instance.lifeEnergy.ToString();
-        matterText.text = "Matter: " + Engine.instance.matter.ToString() + "₥";
-        sympathyText.text = "Sympahty: " + Engine.instance.sympathy.ToString();
-        hostilityText.text = "Hostility: " + Engine.instance.hostility.ToString();
+        dayText.text = "Day: "+Mathf.Floor(Engine.instance.day).ToString();
+        levelText.text = "Level: "+ Mathf.Floor(Engine.instance.playerLevel).ToString();
+        lifeEnergyText.text = "Energy: " + Mathf.Floor(Engine.instance.LifeEnergy).ToString();
+        matterText.text = "Matter: " + Mathf.Floor(Engine.instance.matter).ToString() + "₥";
+        sympathyText.text = "Sympahty: " + Mathf.Floor(Engine.instance.sympathy).ToString();
+        hostilityText.text = "Hostility: " + Mathf.Floor(Engine.instance.hostility).ToString();
     }
 
     public void ActivatePanel()

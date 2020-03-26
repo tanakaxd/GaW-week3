@@ -9,7 +9,8 @@ public class EconomyManager : MonoBehaviour
     public TraitDataBase traitDataBase;
 
     private List<Trait> traits;
-    private float baseIncrease=1;
+    private float baseIncrease=0.5f;
+    private float upwardProbability=0.7f;
 
     //この部分が冗長？
     //何個も配列を作るくらいなら例えばCardオブジェクトにパラメータとして個別に持たせる？
@@ -68,7 +69,7 @@ public class EconomyManager : MonoBehaviour
             priceOscillation[trait] = new List<bool>();
 
             float frequency = trait.GetTraitOscillationFrequency();
-            bool direction = true;//starting upper direction
+            bool direction = UnityEngine.Random.Range(0f,1.0f)<upwardProbability? true:false;//starting upper direction
 
             for (int i = 0; i < 30; i++)//30=arbitrary
             {
@@ -101,11 +102,20 @@ public class EconomyManager : MonoBehaviour
             pastPrice[trait].Add(currentPrice[trait]);
 
             float price = currentPrice[trait];
+            Debug.Log("start"+price);
             float direction = priceOscillation[trait][Engine.instance.day-1]? 1:-1;
+            Debug.Log(direction);
+
             float deltaValue = (float)RandomGaussian(trait.GetTraitValueVolatility(),1);
+            Debug.Log(deltaValue);
+
             deltaValue = Mathf.Max(0, deltaValue);
+            Debug.Log(deltaValue);
+
             price += direction * deltaValue;
             price+=baseIncrease;
+            Debug.Log("end"+price);
+
             currentPrice[trait] = price;
         }
         return currentPrice;

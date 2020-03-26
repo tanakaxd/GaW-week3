@@ -2,15 +2,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-
 public class Engine : MonoBehaviour
 {
     public static Engine instance;
     public int day = 1;
     public int playerLevel = 1;
     public float matter = 1000;
-    public float lifeEnergy = 0;
+    [SerializeField]private float lifeEnergy = 0;
     public float sympathy = 0;
     public float hostility = 10;
     public bool debug = true;
@@ -18,6 +16,24 @@ public class Engine : MonoBehaviour
     private EconomyManager economyManager;
     private CardManager cardManager;
     private SocietyManager societyManager;
+
+    public float LifeEnergy
+    { 
+        get 
+        { 
+            return lifeEnergy;
+        } 
+        set 
+        {
+            lifeEnergy=value;
+            if (lifeEnergy >= 100)
+            {
+                lifeEnergy -= 100;
+                playerLevel++;
+                TopPanelManager.instance.UpdateText();
+            }
+        } 
+    }
 
     private void Awake()
     {
@@ -48,6 +64,7 @@ public class Engine : MonoBehaviour
         }
     }
 
+    #region test
     private IEnumerator temploop()
     {
         while (true)
@@ -69,15 +86,17 @@ public class Engine : MonoBehaviour
         cardManager.UpdateCardsPrice(economyManager.CalculateCurrentPrice());
         cardManager.ActivateCards();
     }
-
+    #endregion
     // Update is called once per frame
     private void Update()
     {
     }
 
+    #region sceneload
     //Engineは常に存続し続けるので、シーンの始まりと同時にstart()で何かを呼び出すということができない。
     //あるシーンがロードされたらという処理を追加しておく必要がある
 
+    #region dealscene
     //取引シーンをロードする
     public void LoadDealScene()
     {
@@ -103,9 +122,12 @@ public class Engine : MonoBehaviour
     {
         SceneManager.sceneLoaded -= DealSceneLoaded;
         SceneManager.sceneUnloaded -= DealSceneUnloaded;
+        cardManager.DiscardAllCardsScripts();
         //cardManager.DeactivateCards();
     }
+    #endregion dealscene
 
+    #region siphonscene
     //Siphonシーンをロードする
     public void LoadSiphonScene()
     {
@@ -125,4 +147,29 @@ public class Engine : MonoBehaviour
         SceneManager.sceneLoaded -= SiphonSceneLoaded;
         SceneManager.sceneUnloaded -= SiphonSceneUnloaded;
     }
+    #endregion siphonscene
+
+    #region nightscene
+    //Nightシーンをロードする
+    public void LoadNightScene()
+    {
+        SceneManager.sceneLoaded += NightSceneLoaded;
+        SceneManager.LoadScene("NightScene");
+    }
+
+    //Nightシーンがロードされたら
+    private void NightSceneLoaded(Scene dealScene, LoadSceneMode mode)
+    {
+        SceneManager.sceneUnloaded += NightSceneUnloaded;
+    }
+
+    //Nightシーンがアンロードされたら
+    private void NightSceneUnloaded(Scene dealScene)
+    {
+        SceneManager.sceneLoaded -= NightSceneLoaded;
+        SceneManager.sceneUnloaded -= NightSceneUnloaded;
+    }
+    #endregion nightscene
+
+    #endregion sceneload
 }

@@ -76,6 +76,11 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    public void DiscardAllCardsScripts()
+    {
+        cards = new List<Card>();
+}
+
     public void ActivateCards()
     {
         foreach(Card card in cards)
@@ -94,8 +99,6 @@ public class CardManager : MonoBehaviour
 
     public void PlusCardAmount(Card card, int amount)
     {
-        Debug.Log(Engine.instance.matter);
-
         if (Engine.instance.matter >= card.BuyoutPrice)
         {
             amountOfCardsInInventory[card.trait] += amount;
@@ -124,6 +127,17 @@ public class CardManager : MonoBehaviour
         //{
         //    Debug.Log(keyValuePair.Key + ":" + keyValuePair.Value);
         //}
+    }
+
+    public void ConsumeCard(Card card, int amount)
+    {
+        if (card.amountOwned >= 1)
+        {
+            amountOfCardsInInventory[card.trait] -= amount;
+            card.ChangeAmount(-amount);
+            Engine.instance.LifeEnergy += card.trait.GetTraitEnergy();
+            onCardAmountChange();
+        }
     }
 
     public void SiphonHumanTraitsToCard(List<Trait> newTraits)
@@ -175,6 +189,8 @@ public class CardManager : MonoBehaviour
 
     public void UpdateSympathy()
     {
+        //カードの保有量が変われば必ずsympathyも変わる
+        //matterとenergyは変わるとは限らない
         float sympathyPoint = 0;
         foreach(Trait trait in traits)
         {

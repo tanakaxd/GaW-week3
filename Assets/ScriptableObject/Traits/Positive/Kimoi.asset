@@ -17,7 +17,7 @@ MonoBehaviour:
   type: 0
   rarity: 0
   category: 0
-  traitEnergy: 100
+  traitEnergy: 10
   traitBaseValue: 100
   traitValueStretch: 10
   traitValueVolatility: 3

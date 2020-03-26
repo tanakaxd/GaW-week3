@@ -1769,7 +1769,7 @@ MonoBehaviour:
   day: 1
   playerLevel: 1
   matter: 1000
-  lifeEnergy: 0
+  lifeEnergy: 90
   sympathy: 0
   hostility: 10
   debug: 1

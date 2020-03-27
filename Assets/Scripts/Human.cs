@@ -118,13 +118,21 @@ public class Human : MonoBehaviour
 
         foreach(Trait trait in traits)
         {
-            //EconomyManagerからのデータが必要
             analyzedEnergy += (int)MyRandom.RandomGaussianUnity(trait.GetTraitEnergy(), trait.GetTraitEnergy()*fuzziness*sigmaAnalyzing);
             analyzedSympathy += (int)MyRandom.RandomGaussianUnity(EconomyManager.instance.currentPrice[trait]
                 , EconomyManager.instance.currentPrice[trait]*fuzziness*sigmaAnalyzing);
         }
-        text += "ANALYSIS COMPLETED\n" + "Analysis Accuracy Level: " + Engine.instance.playerLevel + "\n\n";
-        text += "Extrapolated Life Energy: " + analyzedEnergy + "\n" + "Extrapolated Sympathy: " + analyzedSympathy;
+        text += "ANALYSIS COMPLETED...\n" + "Analysis Accuracy Level: " + Engine.instance.playerLevel + "\n\n";
+        text += "Extrapolated Life Energy: " + analyzedEnergy + "\n" + "Extrapolated Sympathy: " + analyzedSympathy+"\n";
+        text += "Extrapolated Trait:"+"\n";
+        
+        List<Trait> tempTraits = new List<Trait>(traits);
+        for (int i = 0; i < Engine.instance.playerLevel; i++)
+        {
+            int randomIndex = Random.Range(0, tempTraits.Count);
+            text+= "   "+tempTraits[randomIndex].GetTraitName()+"\n";
+            tempTraits.RemoveAt(randomIndex);
+        }
         analyzedResult = text;
     }
 

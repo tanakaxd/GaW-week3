@@ -16,11 +16,13 @@ public class Card : MonoBehaviour
     public Button consumeButton;
     public Button closeButton;
 
-    [HideInInspector] public float currentPrice = 100; //=Sympathy
+    [HideInInspector] public float currentPrice = 100; 
+    [HideInInspector] public float currentSympathy = 100; 
     private float buyoutModifier = 1.01f;
     private float sellModifier = 0.99f;
     public float BuyoutPrice { get { return currentPrice * buyoutModifier ; } }//* trait.GetRarityForFloatValue()
     public float SellPrice { get { return currentPrice * sellModifier ; } }//* trait.GetRarityForFloatValue()
+    //public float Sympathy { get { return currentPrice * EconomyManager.instance.sympathyModifier[trait]; } }
     private List<float> pastPrices = new List<float>();
 
     //private float yesterdayPrice;
@@ -42,23 +44,22 @@ public class Card : MonoBehaviour
     public void Display()
     {
         string text = trait.GetTraitName() + "\n" + Enum.GetName(typeof(RarityOfTrait), trait.GetRarityOfTrait()) + "\n";
-        text += currentPrice + "\n" + "amount: " + amountOwned;
+        text += currentPrice + "\n" +currentSympathy+ "\n" + "Owned: " + amountOwned;
         description.text = text;
     }
 
     public void DisplayDetail()
     {
-        MyDebug.List(pastPrices);
-        string text = "Card Name: " + trait.GetTraitName() + "\n" + "Rarity: " + trait.GetRarityOfTrait().ToString() + "\n";
-        text += "Life Energy: " + trait.GetTraitEnergy()+"\n\n";
-        text += "Current Price: " + currentPrice + "\n" + "  Buy Price: " + BuyoutPrice + "\n" + "  Sell Price: " + SellPrice+"\n";
+        //MyDebug.List(pastPrices);
+        string text = "Card Name: " + trait.GetTraitName() + "\n" + "Rarity: " + trait.GetRarityOfTrait().ToString() + "\n\n";
+        text += "When Consumed:\n" +"   Life Energy: " + trait.GetTraitEnergy() + "\n" + "   Sympathy: " + currentSympathy + "\n\n";
+        text += "Current Price: " + currentPrice + "\n" + "   Buy Price: " + BuyoutPrice + "\n" + "   Sell Price: " + SellPrice+"\n";
         int dayBefore = 1;
         for (int i = pastPrices.Count; i > 0 &&i> pastPrices.Count-3; i--)
         {
             text += "\n" + "Price "+dayBefore + " day before: " + pastPrices[i-1];
             dayBefore++;
         }
-        //+ "\n" + "Price 2 day before: " + pastPrices[pastPrices.Count-2] + "\n";
         dealPanelDescription.text = text;
 
         //Debug.DrawLine()グラフが書ける？Updateでフレームごとに呼ぶ必要あり
@@ -69,10 +70,11 @@ public class Card : MonoBehaviour
         dealPanel.SetActive(true);
     }
 
-    public void UpdatePrice(float price)
+    public void UpdatePrice(float[] prices)//prices[0]:modifiedPrice, prices[1]:modifiedSympathy
     {
-        pastPrices.Add(currentPrice);
-        currentPrice = price;
+        //pastPrices.Add(currentPrice);
+        currentPrice = prices[0];
+        currentSympathy = prices[1];
         Display();
     }
 
@@ -134,5 +136,10 @@ public class Card : MonoBehaviour
     public void SetPriceHistory(List<float> priceHistory)
     {
         pastPrices = priceHistory;
+    }
+
+    private void OnDisable()
+    {
+        EconomyManager.instance.AddTodaysPrice(trait, currentPrice);
     }
 }

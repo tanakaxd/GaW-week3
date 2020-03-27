@@ -5,14 +5,15 @@ using UnityEngine.SceneManagement;
 public class Engine : MonoBehaviour
 {
     public static Engine instance;
-    public int day = 1;
-    public int playerLevel = 1;
-    public float matter = 1000;
-    [SerializeField]private float lifeEnergy = 0;
-    public float sympathy = 0;
-    public float hostility = 10;
-    public bool debug = true;
+    public int day;
+    public int playerLevel;
+    public float matter;
+    [SerializeField]private float lifeEnergy;
+    public float sympathy;
+    public float hostility;
+    public bool debug;
 
+    private float hostilityGrowthRate = 0.15f;
     private EconomyManager economyManager;
     private CardManager cardManager;
     private SocietyManager societyManager;
@@ -42,16 +43,17 @@ public class Engine : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+
+            economyManager = GetComponent<EconomyManager>();
+            cardManager = GetComponent<CardManager>();
+            //societyManager = GetComponent<SocietyManager>();
         }
         else if (instance != this)
         {
+            Debug.Log("Engine Awake Denied");
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
-
-        economyManager = GetComponent<EconomyManager>();
-        cardManager = GetComponent<CardManager>();
-        //societyManager = GetComponent<SocietyManager>();
     }
 
     // Start is called before the first frame update
@@ -100,6 +102,7 @@ public class Engine : MonoBehaviour
     //取引シーンをロードする
     public void LoadDealScene()
     {
+        Debug.Log("Engine LoadDealScene called");
         SceneManager.sceneLoaded += DealSceneLoaded;
         SceneManager.LoadScene("DealScene");
     }
@@ -107,11 +110,15 @@ public class Engine : MonoBehaviour
     //取引シーンがロードされたら
     private void DealSceneLoaded(Scene dealScene, LoadSceneMode mode)
     {
+        Debug.Log("Engine DealSceneLoaded called");
         SceneManager.sceneUnloaded += DealSceneUnloaded;
+
+        //日にちが始まった時のスクリーンcoroutine
+
         cardManager.GetAllCardScriptsInScene();
         societyManager = GameObject.Find("SocietyManager").GetComponent<SocietyManager>();
         societyManager.OccurSociety();
-        societyManager.PopupSociety();
+        //societyManager.PopupSociety();
         cardManager.UpdateCardsPrice(economyManager.CalculateCurrentPrice());
         cardManager.UpdateAllAmount();
         //cardManager.ActivateCards();
@@ -139,6 +146,9 @@ public class Engine : MonoBehaviour
     private void SiphonSceneLoaded(Scene dealScene, LoadSceneMode mode)
     {
         SceneManager.sceneUnloaded += SiphonSceneUnloaded;
+        day++;
+        hostility *= (hostilityGrowthRate + 1);
+        TopPanelManager.instance.UpdateText();
     }
 
     //Siphonシーンがアンロードされたら

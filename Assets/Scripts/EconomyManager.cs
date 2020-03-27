@@ -9,14 +9,16 @@ public class EconomyManager : MonoBehaviour
     public TraitDataBase traitDataBase;
 
     private List<Trait> traits;
-    private float baseIncrease=0.5f;
+    private float baseIncrease=0.3f;
     private float upwardProbability=0.7f;
 
     //この部分が冗長？
     //何個も配列を作るくらいなら例えばCardオブジェクトにパラメータとして個別に持たせる？
-    [HideInInspector]public Dictionary<Trait, float> currentPrice;
+    [HideInInspector]public Dictionary<Trait, float> currentPrice;//modifyされる前の原始的な値
     [HideInInspector]public Dictionary<Trait, List<float>> pastPrice;
-    private Dictionary<Trait, float> priceModifier;
+    [HideInInspector]public Dictionary<Trait, float> priceModifier;
+    [HideInInspector]public Dictionary<Trait, float> sympathyModifier;
+    [HideInInspector]public Dictionary<Trait, float> volatilityModifier;
     private Dictionary<Trait, List<bool>> priceOscillation;
 
     private void Awake()
@@ -24,25 +26,30 @@ public class EconomyManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+
+            traits = new List<Trait>(traitDataBase.GetTraitLists());
+            currentPrice = new Dictionary<Trait, float>();
+            pastPrice = new Dictionary<Trait, List<float>>();
+            priceModifier = new Dictionary<Trait, float>();
+            sympathyModifier = new Dictionary<Trait, float>();
+            volatilityModifier = new Dictionary<Trait, float>();
+            priceOscillation = new Dictionary<Trait, List<bool>>();
+            foreach (Trait trait in traits)
+            {
+                pastPrice[trait] = new List<float>();
+
+                currentPrice[trait] = trait.GetTraitBaseValue();
+                priceModifier[trait] = 1;
+                sympathyModifier[trait] = 1;
+                volatilityModifier[trait] = 1;
+            }
+            GenerateOscillation();
         }
         else if (instance != this)
         {
             Destroy(gameObject);
         }
         //DontDestroyOnLoad(gameObject);
-        traits = new List<Trait>(traitDataBase.GetTraitLists());
-        currentPrice = new Dictionary<Trait, float>();
-        pastPrice = new Dictionary<Trait, List<float>>();
-        priceModifier = new Dictionary<Trait, float>();
-        priceOscillation = new Dictionary<Trait, List<bool>>();
-        foreach (Trait trait in traits)
-        {
-            pastPrice[trait] = new List<float>();
-
-            currentPrice[trait] = trait.GetTraitBaseValue();
-            priceModifier[trait] = 1;
-        }
-        GenerateOscillation();
     }
     // Start is called before the first frame update
     void Start()
@@ -91,44 +98,109 @@ public class EconomyManager : MonoBehaviour
                 }
                 direction = !direction;
             }
+            MyDebug.List(priceOscillation[trait]);
         }
     }
 
-    public Dictionary<Trait,float> CalculateCurrentPrice()
+    public Dictionary<Trait,float[]> CalculateCurrentPrice()
     {
         //List<Trait> traits = new List<Trait>(currentPrice.Keys);
-        foreach(Trait trait in traits)
-        {
-            pastPrice[trait].Add(currentPrice[trait]);
 
-            float price = currentPrice[trait];
-            Debug.Log("start"+price);
+        Dictionary<Trait, float[]> currentPrices = new Dictionary<Trait, float[]>();
+
+        foreach (Trait trait in traits)
+        {
+            //pastPrice[trait].Add(currentPrice[trait]);//modifiedされた値でない
+
+            float price = currentPrice[trait];//modifyされる前の原始的な値
+            //Debug.Log("start"+price);
             float direction = priceOscillation[trait][Engine.instance.day-1]? 1:-1;
-            Debug.Log(direction);
+            //Debug.Log(direction);
 
             float deltaValue = (float)RandomGaussian(trait.GetTraitValueVolatility(),1);
-            Debug.Log(deltaValue);
+            //Debug.Log(deltaValue);
 
             deltaValue = Mathf.Max(0, deltaValue);
-            Debug.Log(deltaValue);
+            //Debug.Log(deltaValue);
 
             price += direction * deltaValue;
             price+=baseIncrease;
-            Debug.Log("end"+price);
+            //Debug.Log("end"+price);
 
-            currentPrice[trait] = price;
+            currentPrice[trait] = price;//modifyされる前の原始的な値
+            currentPrices[trait] = new float[] { price * priceModifier[trait], price * sympathyModifier[trait] };
+            //Debug.Log(currentPrices[trait][0]);
+            //Debug.Log(currentPrices[trait][1]);
+
+            //currentPrices[trait][0] = price*priceModifier[trait];
+            //currentPrices[trait][1] = price*sympathyModifier[trait];
+            //currentPrices[trait][0] = price;
         }
-        return currentPrice;
+        return currentPrices;
     }
 
-    public void ApplyCurrentPrice()
+    public void AddTodaysPrice(Trait trait, float todaysPrice)
     {
-
+        List<Trait> keys = new List<Trait>(pastPrice.Keys);
+        foreach(Trait key in keys)
+        {
+            if (key == trait)
+            {
+                pastPrice[trait].Add(todaysPrice);
+                return;
+            }
+        }
     }
 
-    internal void ValueMore(Trait trait)
+
+    private void ValueMore(Trait trait)
     {
         priceModifier[trait] += 0.1f;
+    }
+
+    private void VolatilityMore(Trait trait)
+    {
+        volatilityModifier[trait] += 0.1f;
+    }
+
+    private void sympathyMore(Trait trait)
+    {
+        sympathyModifier[trait] += 0.1f;
+    }
+
+    public void TweakModifier(Society society, List<Trait> choseTraits)
+    {
+        string societyName = society.GetSocietyName();
+        if (societyName == "Constagram")
+        {
+            foreach(Trait trait in choseTraits)
+            {
+                ValueMore(trait);
+            }
+            MyDebug.Dictionary(priceModifier);
+        }
+        else if(societyName == "Pewtuber")
+        {
+            foreach (Trait trait in choseTraits)
+            {
+                VolatilityMore(trait);
+            }
+            MyDebug.Dictionary(volatilityModifier);
+
+        }
+        else if(societyName == "Today")
+        {
+            foreach (Trait trait in choseTraits)
+            {
+                sympathyMore(trait);
+            }
+            MyDebug.Dictionary(sympathyModifier);
+
+        }
+        else
+        {
+            Debug.LogError("invalid societyName");
+        }
     }
 
     public static double RandomGaussian(float average, float sigma)

@@ -29,15 +29,15 @@ public class CardManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            traits = new List<Trait>(traitDataBase.GetTraitLists());
+            //onCardAmountChange+= TopPanelManager.instance.UpdateText;
+            InitInventory();
         }
         else if (instance != this)
         {
             Destroy(gameObject);
         }
         //DontDestroyOnLoad(gameObject);
-        traits = new List<Trait>(traitDataBase.GetTraitLists());
-        onCardAmountChange+= UpdateSympathy;
-        InitInventory();
     }
 
     // Start is called before the first frame update
@@ -57,9 +57,11 @@ public class CardManager : MonoBehaviour
         {
             amountOfCardsInInventory[trait] = 0;
         }
+        //MyDebug.Dictionary(amountOfCardsInInventory);
+
     }
-    
-   
+
+
     public void GetAllCardScriptsInScene() //hierarchy上のカードオブジェクトのスクリプトをすべて取得
     {
         foreach (Trait trait in traits)
@@ -104,8 +106,10 @@ public class CardManager : MonoBehaviour
             amountOfCardsInInventory[card.trait] += amount;
             card.ChangeAmount(amount);
             Engine.instance.matter -= card.BuyoutPrice;
-            onCardAmountChange();
-            Debug.Log("buyout!");
+            TopPanelManager.instance.UpdateText();
+            //onCardAmountChange?.Invoke();
+
+            //Debug.Log("buyout!");
 
         }
         //foreach (KeyValuePair<Trait, int> keyValuePair in amountOfCardsInInventory)
@@ -121,7 +125,9 @@ public class CardManager : MonoBehaviour
             amountOfCardsInInventory[card.trait] -= amount;
             card.ChangeAmount(-amount);
             Engine.instance.matter += card.SellPrice;
-            onCardAmountChange();
+            TopPanelManager.instance.UpdateText();
+            //onCardAmountChange?.Invoke();
+
         }
         //foreach (KeyValuePair<Trait, int> keyValuePair in amountOfCardsInInventory)
         //{
@@ -136,7 +142,9 @@ public class CardManager : MonoBehaviour
             amountOfCardsInInventory[card.trait] -= amount;
             card.ChangeAmount(-amount);
             Engine.instance.LifeEnergy += card.trait.GetTraitEnergy();
-            onCardAmountChange();
+            Engine.instance.sympathy += card.currentSympathy;
+            TopPanelManager.instance.UpdateText();
+            //onCardAmountChange?.Invoke();
         }
     }
 
@@ -151,18 +159,20 @@ public class CardManager : MonoBehaviour
                 if(trait.GetTraitName()== newTrait.GetTraitName())
                 {
                     amountOfCardsInInventory[trait]++;
-                    onCardAmountChange();
-                    Debug.Log(trait.GetTraitName());
-                    Debug.Log(amountOfCardsInInventory[trait]);
+
+                    //onCardAmountChange?.Invoke();
+
+                    //Debug.Log(trait.GetTraitName());
+                    //Debug.Log(amountOfCardsInInventory[trait]);
                 }
 
             }
         }
     }
 
-    public void UpdateCardsPrice(Dictionary<Trait,float> currentPrice)//最新の価格に反映して、過去のデータも与える
+    public void UpdateCardsPrice(Dictionary<Trait,float[]> currentPrices)//最新の価格に反映して、過去のデータも与える
     {
-        Debug.Log("UpdateCardsPrice");
+        //Debug.Log("UpdateCardsPrice");
 
         foreach (Card card in cards)
         {
@@ -170,9 +180,9 @@ public class CardManager : MonoBehaviour
             {
                 if (card.gameObject.name == trait.GetTraitName())
                 {
-                    card.UpdatePrice(currentPrice[trait]);
+                    card.UpdatePrice(currentPrices[trait]);
                     card.SetPriceHistory(EconomyManager.instance.pastPrice[trait]);
-                    Debug.Log("UpdateCardsPrice");
+                    //Debug.Log("UpdateCardsPrice");
                 }
             }
         }
@@ -182,15 +192,14 @@ public class CardManager : MonoBehaviour
     {
         foreach(Card card in cards)
         {
+            //MyDebug.Dictionary(amountOfCardsInInventory);
             card.UpdateAmount(amountOfCardsInInventory[card.trait]);
         }
-        onCardAmountChange();
+        //onCardAmountChange?.Invoke();
     }
-
+    /*
     public void UpdateSympathy()
     {
-        //カードの保有量が変われば必ずsympathyも変わる
-        //matterとenergyは変わるとは限らない
         float sympathyPoint = 0;
         foreach(Trait trait in traits)
         {
@@ -200,4 +209,5 @@ public class CardManager : MonoBehaviour
         Engine.instance.sympathy = sympathyPoint;
         TopPanelManager.instance.UpdateText();
     }
+    */
 }

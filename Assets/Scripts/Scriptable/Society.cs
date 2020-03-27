@@ -66,16 +66,27 @@ public class Society : ScriptableObject
     //{
     //    influence.Apply();
     //}
-    public List<string> GetNewsDescription()
+    public string GetNewsDescription(Trait trait)
     {
-        List<string> texts = new List<string>();
-        foreach(Trait trait in traitInfluenced)
+        string text = "";
+
+        if (societyName == "Constagram")
         {
-            string text = "";
-            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Increases its Value in the Anoma";
-            texts.Add(text);
+            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Increases its PRICE in the ANOMA";
         }
-        
-        return texts;
+        else if (societyName == "Pewtuber")
+        {
+            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Increases its VOLATILITY in the ANOMA";
+        }
+        else if (societyName == "Today")
+        {
+            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Increases its SYMPATHY in the ANOMA";
+        }
+        else
+        {
+            Debug.LogError("invalid societyName");
+        }
+
+        return text;
     }
 }

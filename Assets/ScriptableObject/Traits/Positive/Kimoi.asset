@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traitID: 0
   traitName: Kimoi
-  type: 0
+  type: 1
   rarity: 0
   category: 0
   traitEnergy: 10
   traitBaseValue: 100
+  traitBaseSympathy: 0
   traitValueStretch: 10
   traitValueVolatility: 3
   traitOscillationFrequency: 3

@@ -69,16 +69,21 @@ public class HumanManager : MonoBehaviour
     //inspectorから登録する関数
     public void ReloadHumen()
     {
-        for (int i = 0; i < humen.Count; i++)
+        if (Engine.instance.matter >= 100)
         {
-            NullifyHuman(humen[i]);
-            GenerateHuman(humen[i]);
-            humen[i].AnalyzeHuman();
-            //humen[i].DisplayHuman();
+            for (int i = 0; i < humen.Count; i++)
+            {
+                NullifyHuman(humen[i]);
+                GenerateHuman(humen[i]);
+                humen[i].AnalyzeHuman();
+                //humen[i].DisplayHuman();
 
 
+            }
+            ActivateAllHumen();
+            Engine.instance.matter -= 100;
+            TopPanelManager.instance.UpdateText();
         }
-        ActivateAllHumen();
     }
 
     private void NullifyHuman(Human human)

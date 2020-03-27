@@ -19,7 +19,8 @@ MonoBehaviour:
   category: 1
   traitEnergy: 12
   traitBaseValue: -130
+  traitBaseSympathy: 0
   traitValueStretch: 3
-  traitValueVolatility: 2
-  traitOscillationFrequency: 4
+  traitValueVolatility: 5
+  traitOscillationFrequency: 2
   information: 

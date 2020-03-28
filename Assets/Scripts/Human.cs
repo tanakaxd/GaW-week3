@@ -12,7 +12,7 @@ public class Human : MonoBehaviour
     public Button closeButton;
     public TextMeshProUGUI siphonPanelDescription;
     public SpriteDataBase spriteDataBase;
-    public Image image;
+    //public Image image;
     #endregion
 
     #region transitionUI
@@ -21,21 +21,26 @@ public class Human : MonoBehaviour
     public Button okButton;
     #endregion
 
+    public TextureManager textureManager;
+
     private int analyzedEnergy=0;
-    //private int analyzedMatter=0;
+    private int analyzedMatter=0;
     private int analyzedSympathy=0;
     [HideInInspector]public string analyzedResult="";
 
     private float[] levelToFuzziness = {0.5f,0.4f,0.3f,0.2f,0.1f};
-    private float sigmaAnalyzing = 0.5f;
+    private float sigmaOnAnalysis = 0.5f;
 
     [HideInInspector] public List<Trait> traits = new List<Trait>();
-    private Sprite sprite;
-
+    //private Sprite sprite;
+    private RawImage image;
+    private void Awake()
+    {
+        image = GetComponent<RawImage>();
+    }
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -47,6 +52,7 @@ public class Human : MonoBehaviour
     public void InitHuman()
     {
         analyzedEnergy = 0;
+        analyzedMatter = 0;
         analyzedSympathy = 0;
         analyzedResult = "";
         traits = new List<Trait>();
@@ -54,9 +60,9 @@ public class Human : MonoBehaviour
 
     public void Display()
     {
-        //spriteをランダムに選んで表示させる処理
-        sprite = spriteDataBase.GetRandomSprite();
-        image.sprite = sprite;
+        //textureをランダムに選んで表示させる処理
+        image.texture = textureManager.GetRandomTexture();
+ 
     }
 
 
@@ -114,16 +120,21 @@ public class Human : MonoBehaviour
     {
         string text="";
 
-        float fuzziness = levelToFuzziness[Engine.instance.playerLevel-1];
+        float fuzziness = levelToFuzziness[Mathf.Min(Engine.instance.playerLevel-1,4)];//{0.5f,0.4f,0.3f,0.2f,0.1f}
 
-        foreach(Trait trait in traits)
+        foreach (Trait trait in traits)
         {
-            analyzedEnergy += (int)MyRandom.RandomGaussianUnity(trait.GetTraitEnergy(), trait.GetTraitEnergy()*fuzziness*sigmaAnalyzing);
-            analyzedSympathy += (int)MyRandom.RandomGaussianUnity(EconomyManager.instance.currentPrice[trait]
-                , EconomyManager.instance.currentPrice[trait]*fuzziness*sigmaAnalyzing);
+            int posOrNega = trait.GetTypeOfTrait() == TypeOfTrait.Positive ? 1 : -1;
+
+            analyzedEnergy += (int)MyRandom.RandomGaussianUnity(trait.GetTraitEnergy(), trait.GetTraitEnergy()*fuzziness*sigmaOnAnalysis);
+            analyzedMatter += (int)MyRandom.RandomGaussianUnity(EconomyManager.instance.currentPrice[trait]
+                , EconomyManager.instance.currentPrice[trait] * fuzziness * sigmaOnAnalysis);
+            analyzedSympathy += (int)MyRandom.RandomGaussianUnity(EconomyManager.instance.currentPrice[trait]*posOrNega
+                , EconomyManager.instance.currentPrice[trait]*fuzziness*sigmaOnAnalysis);
         }
         text += "ANALYSIS COMPLETED...\n" + "Analysis Accuracy Level: " + Engine.instance.playerLevel + "\n\n";
-        text += "Extrapolated Life Energy: " + analyzedEnergy + "\n" + "Extrapolated Sympathy: " + analyzedSympathy+"\n";
+        text += "Extrapolated Life Energy: " + analyzedEnergy + "\n" + "Extrapolated Matter: " + analyzedMatter+"₥\n"
+            + "Extrapolated Sympathy: " + analyzedSympathy + "\n";
         text += "Extrapolated Trait:"+"\n";
         
         List<Trait> tempTraits = new List<Trait>(traits);

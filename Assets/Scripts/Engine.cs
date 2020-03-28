@@ -13,7 +13,7 @@ public class Engine : MonoBehaviour
     public float hostility;
     public bool debug;
 
-    private float hostilityGrowthRate = 0.15f;
+    private float hostilityGrowthRate = 0.2f; //100なら20000ぐらいになる計算。20％の複利で30回
     private EconomyManager economyManager;
     private CardManager cardManager;
     private SocietyManager societyManager;

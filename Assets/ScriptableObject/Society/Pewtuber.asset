@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e26130ed1735604b812e02fd616c2c1, type: 3}
+  m_Name: Pewtuber
+  m_EditorClassIdentifier: 
+  societyID: 1
+  societyName: Pewtuber
+  traitInfluenced:
+  - {fileID: 11400000, guid: 6d4453989a184374dbb04c324bb5dc1b, type: 2}
+  - {fileID: 11400000, guid: a3bc2061d11225e4796e517781812217, type: 2}
+  - {fileID: 11400000, guid: 0fc829b16b414a44e81cff1e5149ac79, type: 2}
+  - {fileID: 11400000, guid: 9aea48c64c0a2dc4f9a40b11a907d4d2, type: 2}
+  - {fileID: 11400000, guid: 593542ef68af47e489d6b7062a1f386a, type: 2}
+  - {fileID: 11400000, guid: b2906adc7fa62fd4e83759a2a7877f24, type: 2}
+  - {fileID: 11400000, guid: 227e5ea51480ca943b3fd03fe48d071d, type: 2}
+  - {fileID: 11400000, guid: fff5f562355f47447b04bd1f9c17d5c6, type: 2}
+  - {fileID: 11400000, guid: bc0375db84d93f84ca13ef32bbb351c4, type: 2}
+  - {fileID: 11400000, guid: b77bcab87f919454fb26c2fa6944b8ff, type: 2}
+  - {fileID: 11400000, guid: 310ae9a95ed01054b88e9021e14355fc, type: 2}
+  - {fileID: 11400000, guid: de7e7a2cc92ba1b4ca88405e13c22e76, type: 2}
+  effector: 1
+  newsTitle: Pewtuber League Held Crown Fiesta Now Even Shits are Admired
+  information: 

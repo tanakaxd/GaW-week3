@@ -80,7 +80,7 @@ public class Society : ScriptableObject
         }
         else if (societyName == "Today")
         {
-            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Increases its SYMPATHY in the ANOMA";
+            text += "- Trait \"" + trait.GetTraitName().ToUpper() + "\" Scales its SYMPATHY in the ANOMA";
         }
         else
         {

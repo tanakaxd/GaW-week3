@@ -9,8 +9,8 @@ public class HumanManager : MonoBehaviour
     public List<Human> humen;
 
     private List<Trait> traits;
-    private int minimunTraits = 5;
-    private int maximamTraits = 8;
+    private int minimunTraits = 4;
+    private int maximamTraits = 6;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +20,7 @@ public class HumanManager : MonoBehaviour
         {
             GenerateHuman(humen[i]);
             humen[i].AnalyzeHuman();
-            // humen[i].DisplayHuman();
+            humen[i].Display();
 
         }
 
@@ -76,7 +76,7 @@ public class HumanManager : MonoBehaviour
                 NullifyHuman(humen[i]);
                 GenerateHuman(humen[i]);
                 humen[i].AnalyzeHuman();
-                //humen[i].DisplayHuman();
+                humen[i].Display();
 
 
             }

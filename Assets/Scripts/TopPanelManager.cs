@@ -49,7 +49,7 @@ public class TopPanelManager : MonoBehaviour
     {
         dayText.text = "Day: "+Mathf.Floor(Engine.instance.day).ToString();
         levelText.text = "Level: "+ Mathf.Floor(Engine.instance.playerLevel).ToString();
-        lifeEnergyText.text = "Energy: " + Mathf.Floor(Engine.instance.LifeEnergy).ToString();
+        lifeEnergyText.text = "LifeEnergy: " + Mathf.Floor(Engine.instance.LifeEnergy).ToString();
         matterText.text = "Matter: " + Mathf.Floor(Engine.instance.matter).ToString() + "₥";
         sympathyText.text = "Sympahty: " + Mathf.Floor(Engine.instance.sympathy).ToString();
         hostilityText.text = "Hostility: " + Mathf.Floor(Engine.instance.hostility).ToString();

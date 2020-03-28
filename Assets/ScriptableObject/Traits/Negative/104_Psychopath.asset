@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f424a87130b36845a153c12ebe1ffcd, type: 3}
+  m_Name: 104_Psychopath
+  m_EditorClassIdentifier: 
+  traitID: 104
+  traitName: Psychopath
+  traitNameJP: "\u30B5\u30A4\u30B3\u30D1\u30B9"
+  type: 0
+  rarity: 3
+  category: 0
+  traitEnergy: 13
+  traitBaseValue: 150
+  traitBaseSympathy: 0
+  traitValueStretch: 0
+  traitValueVolatility: 10
+  traitOscillationFrequency: 2
+  information: 

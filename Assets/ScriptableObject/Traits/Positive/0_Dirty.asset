@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f424a87130b36845a153c12ebe1ffcd, type: 3}
-  m_Name: Seiketsukan
+  m_Name: 0_Dirty
   m_EditorClassIdentifier: 
-  traitID: 100
-  traitName: Seiketsukan
-  type: 0
-  rarity: 2
+  traitID: 0
+  traitName: Dirty
+  traitNameJP: "\u5ACC\u60AA\u611F"
+  type: 1
+  rarity: 1
   category: 0
   traitEnergy: 10
-  traitBaseValue: -100
+  traitBaseValue: 100
+  traitBaseSympathy: 0
   traitValueStretch: 10
-  traitValueVolatility: 1
+  traitValueVolatility: 3
   traitOscillationFrequency: 3
-  information: you not gross!
+  information: you gross!

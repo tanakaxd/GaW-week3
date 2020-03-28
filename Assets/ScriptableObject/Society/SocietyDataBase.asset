@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   societyLists:
   - {fileID: 11400000, guid: 8d4dd8dc2b904314abd16eddeef31909, type: 2}
+  - {fileID: 11400000, guid: d929e6a5d05943141a69a9d50908ffa9, type: 2}
+  - {fileID: 11400000, guid: 99405f287c438784aacf36f144283e5c, type: 2}

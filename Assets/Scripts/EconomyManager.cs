@@ -117,7 +117,7 @@ public class EconomyManager : MonoBehaviour
             float direction = priceOscillation[trait][Engine.instance.day-1]? 1:-1;
             //Debug.Log(direction);
 
-            float deltaValue = (float)RandomGaussian(trait.GetTraitValueVolatility(),1);
+            float deltaValue = (float)RandomGaussianUnity(trait.GetTraitValueVolatility(),1)*volatilityModifier[trait];
             //Debug.Log(deltaValue);
 
             deltaValue = Mathf.Max(0, deltaValue);
@@ -128,7 +128,8 @@ public class EconomyManager : MonoBehaviour
             //Debug.Log("end"+price);
 
             currentPrice[trait] = price;//modifyされる前の原始的な値
-            currentPrices[trait] = new float[] { price * priceModifier[trait], price * sympathyModifier[trait] };
+            int negativeOrPositive = trait.GetTypeOfTrait() == TypeOfTrait.Positive ? 1 : -1;
+            currentPrices[trait] = new float[] { price * priceModifier[trait], price * sympathyModifier[trait]* negativeOrPositive };
             //Debug.Log(currentPrices[trait][0]);
             //Debug.Log(currentPrices[trait][1]);
 

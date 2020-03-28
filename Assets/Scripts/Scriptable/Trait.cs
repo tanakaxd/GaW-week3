@@ -33,6 +33,9 @@ public class Trait : ScriptableObject
     private string traitName;
 
     [SerializeField]
+    private string traitNameJP;
+
+    [SerializeField]
     private TypeOfTrait type;
 
     [SerializeField]
@@ -92,6 +95,11 @@ public class Trait : ScriptableObject
     public string GetTraitName()
     {
         return traitName;
+    }
+
+    public string GetTraitNameJP()
+    {
+        return traitNameJP;
     }
 
     public TypeOfTrait GetTypeOfTrait()

@@ -14,7 +14,7 @@ public class SocietyManager : MonoBehaviour
     public List<TextMeshProUGUI> newsInfluence;
 
     private List<Society> societies;
-    private int modifiedTraitsPerSociety=4;
+    private int modifiedTraitsPerSociety=6;
     private float societyOccurenceRate=0.2f;
 
     private void Awake()

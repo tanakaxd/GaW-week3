@@ -10,6 +10,7 @@ public class Card : MonoBehaviour
     public TextMeshProUGUI description;
     public GameObject dealPanel;
     public TextMeshProUGUI dealPanelDescription;
+    public LineRenderer chartLine;
 
     public Button buyButton;
     public Button sellButton;
@@ -43,15 +44,15 @@ public class Card : MonoBehaviour
 
     public void Display()
     {
-        string text = trait.GetTraitName() + "\n" + Enum.GetName(typeof(RarityOfTrait), trait.GetRarityOfTrait()) + "\n";
-        text += currentPrice + "\n" +currentSympathy+ "\n" + "Owned: " + amountOwned;
+        string text = trait.GetTraitName() + "\n\n" + Enum.GetName(typeof(RarityOfTrait), trait.GetRarityOfTrait()) + "\n";
+        text += trait.GetTraitEnergy() + "\n" + currentPrice + "\n" +currentSympathy+ "\n" + "Owned: " + amountOwned;
         description.text = text;
     }
 
-    public void DisplayDetail()
+    public void DisplayDetail()    //inspectorから登録する関数
     {
         //MyDebug.List(pastPrices);
-        string text = "Card Name: " + trait.GetTraitName() + "\n" + "Rarity: " + trait.GetRarityOfTrait().ToString() + "\n\n";
+        string text = "Card Name: " + trait.GetTraitName().ToUpper() + "\n" + "Rarity: " + trait.GetRarityOfTrait().ToString() + "\n\n";
         text += "When Consumed:\n" +"   Life Energy: " + trait.GetTraitEnergy() + "\n" + "   Sympathy: " + currentSympathy + "\n\n";
         text += "Current Price: " + currentPrice + "\n" + "   Buy Price: " + BuyoutPrice + "\n" + "   Sell Price: " + SellPrice+"\n";
         int dayBefore = 1;
@@ -63,11 +64,25 @@ public class Card : MonoBehaviour
         dealPanelDescription.text = text;
 
         //Debug.DrawLine()グラフが書ける？Updateでフレームごとに呼ぶ必要あり
+        DrawChart();
 
         RegisterDeal();
         RegisterClose();
 
         dealPanel.SetActive(true);
+    }
+
+    private void DrawChart()
+    {
+        chartLine.positionCount = pastPrices.Count+1;//SetPositionsを使う前に必須
+        Vector3[] positions = new Vector3[pastPrices.Count+1];
+        for (int i = 0; i < pastPrices.Count; i++)
+        {
+            Vector3 position = new Vector3(i * 10, pastPrices[i], 0);
+            positions[i]=position;
+        }
+        positions[positions.Length-1] = new Vector3((positions.Length - 1) * 10, currentPrice, 0);
+        chartLine.SetPositions(positions);
     }
 
     public void UpdatePrice(float[] prices)//prices[0]:modifiedPrice, prices[1]:modifiedSympathy

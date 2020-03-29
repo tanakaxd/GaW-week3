@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe671e858a6fea44d9b6a0c0a64e766a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 578652535}
   day: 1
   playerLevel: 1
   matter: 1000
@@ -79,6 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   traitDataBase: {fileID: 11400000, guid: b34e349f65b40504f94613ffac59737c, type: 2}
+  cards: []
 --- !u!82 &578652535
 AudioSource:
   m_ObjectHideFlags: 0

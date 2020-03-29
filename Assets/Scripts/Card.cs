@@ -45,7 +45,7 @@ public class Card : MonoBehaviour
     public void Display()
     {
         string text = trait.GetTraitName() + "\n\n" + Enum.GetName(typeof(RarityOfTrait), trait.GetRarityOfTrait()) + "\n";
-        text += trait.GetTraitEnergy() + "\n" + currentPrice + "\n" +currentSympathy+ "\n" + "Owned: " + amountOwned;
+        text += "E:"+trait.GetTraitEnergy() + "\n" + "P:"+currentPrice+"₥" + "\n" +"S:"+currentSympathy+ "\n" + "Owned: " + amountOwned;
         description.text = text;
     }
 

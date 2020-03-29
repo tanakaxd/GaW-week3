@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class Engine : MonoBehaviour
 {
     public static Engine instance;
+    public AudioSource audioSource;
     public int day;
     public int playerLevel;
     public float matter;
@@ -13,6 +14,8 @@ public class Engine : MonoBehaviour
     public float hostility;
     public bool debug;
 
+    private float requiredEnergy = 200;
+    public float  RequiredEnergy { get {return requiredEnergy; } }
     private float hostilityGrowthRate = 0.2f; //100なら20000ぐらいになる計算。20％の複利で30回
     private EconomyManager economyManager;
     private CardManager cardManager;
@@ -27,10 +30,11 @@ public class Engine : MonoBehaviour
         set 
         {
             lifeEnergy=value;
-            if (lifeEnergy >= 100)
+            if (lifeEnergy >= requiredEnergy&&playerLevel<5)
             {
-                lifeEnergy -= 100;
+                lifeEnergy -= requiredEnergy;
                 playerLevel++;
+                requiredEnergy = Mathf.Pow(2, playerLevel-1) * 200;
                 TopPanelManager.instance.UpdateText();
             }
         } 

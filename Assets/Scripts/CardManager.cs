@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-    //カードを存続させるとUIの取得が面倒
-    //カードを存続させないと過去の価格などがキープできない
+//カードを存続させるとUIの取得が面倒
+//カードを存続させないと過去の価格などがキープできない
 public class CardManager : MonoBehaviour
 {
     public static CardManager instance;
@@ -10,7 +11,7 @@ public class CardManager : MonoBehaviour
     //sceneを新しくする毎にCardスクリプトは新しく作られる？
     //だとするとその都度すべて取得しなおす必要がある。
 
-    private List<Card> cards = new List<Card>();
+    [HideInInspector]public List<Card> cards = new List<Card>();
     private List<Trait> traits;
 
     private Dictionary<Trait, int> amountOfCardsInInventory = new Dictionary<Trait, int>();
@@ -107,7 +108,7 @@ public class CardManager : MonoBehaviour
             card.ChangeAmount(amount);
             Engine.instance.matter -= card.BuyoutPrice;
             TopPanelManager.instance.UpdateText();
-            //onCardAmountChange?.Invoke();
+            onCardAmountChange?.Invoke();
 
             //Debug.Log("buyout!");
 
@@ -126,7 +127,7 @@ public class CardManager : MonoBehaviour
             card.ChangeAmount(-amount);
             Engine.instance.matter += card.SellPrice;
             TopPanelManager.instance.UpdateText();
-            //onCardAmountChange?.Invoke();
+            onCardAmountChange?.Invoke();
 
         }
         //foreach (KeyValuePair<Trait, int> keyValuePair in amountOfCardsInInventory)
@@ -144,7 +145,7 @@ public class CardManager : MonoBehaviour
             Engine.instance.LifeEnergy += card.trait.GetTraitEnergy();
             Engine.instance.sympathy += card.currentSympathy;
             TopPanelManager.instance.UpdateText();
-            //onCardAmountChange?.Invoke();
+            onCardAmountChange?.Invoke();
         }
     }
 
@@ -160,7 +161,7 @@ public class CardManager : MonoBehaviour
                 {
                     amountOfCardsInInventory[trait]++;
 
-                    //onCardAmountChange?.Invoke();
+                    onCardAmountChange?.Invoke();
 
                     //Debug.Log(trait.GetTraitName());
                     //Debug.Log(amountOfCardsInInventory[trait]);
@@ -195,7 +196,7 @@ public class CardManager : MonoBehaviour
             //MyDebug.Dictionary(amountOfCardsInInventory);
             card.UpdateAmount(amountOfCardsInInventory[card.trait]);
         }
-        //onCardAmountChange?.Invoke();
+        onCardAmountChange?.Invoke();
     }
     /*
     public void UpdateSympathy()
@@ -210,4 +211,6 @@ public class CardManager : MonoBehaviour
         TopPanelManager.instance.UpdateText();
     }
     */
+
+
 }

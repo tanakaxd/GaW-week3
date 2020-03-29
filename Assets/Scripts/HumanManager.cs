@@ -9,8 +9,10 @@ public class HumanManager : MonoBehaviour
     public List<Human> humen;
 
     private List<Trait> traits;
-    private int minimunTraits = 4;
-    private int maximamTraits = 6;
+    private int minimunTraits = 3;
+    private int maximamTraits = 9;
+    private int averageTraits = 4;
+    private float averageIncrement = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +47,10 @@ public class HumanManager : MonoBehaviour
 
     void GenerateHuman(Human human)
     {
-        int randomNumber = Random.Range(minimunTraits,maximamTraits);
+        int randomNumber = (int)MyRandom.RandomGaussianUnity(averageTraits+(Engine.instance.playerLevel-1)* averageIncrement,1);
+        randomNumber = Mathf.Clamp(randomNumber,minimunTraits, maximamTraits);
+        Debug.Log(randomNumber);
+
         int count = 0;
         while (true)
         {
@@ -54,11 +59,15 @@ public class HumanManager : MonoBehaviour
                 break;
             }
 
-            human.traits.Add(traits[Random.Range(0, traits.Count)]);
+            Trait potentialTrait = traits[Random.Range(0, traits.Count)];
+            if (potentialTrait.GetRarityForAppearanceProbability() >= Random.Range(0f, 1f))
+            {
+                human.traits.Add(potentialTrait);
+            }
 
             count++;
 
-            if (count > 100)
+            if (count > 300)
             {
                 break;
             }

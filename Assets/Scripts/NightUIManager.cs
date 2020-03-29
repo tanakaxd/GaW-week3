@@ -10,6 +10,8 @@ public class NightUIManager : MonoBehaviour
     public TextMeshProUGUI hostility;
     public TextMeshProUGUI result;
     public Button nextDayButton;
+    public AudioClip surviveSound;
+    public AudioClip deathSound;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +39,7 @@ public class NightUIManager : MonoBehaviour
         {
             text = "YOU SURVIVED!";
             yield return new WaitForSeconds(2);
+            Engine.instance.audioSource.PlayOneShot(surviveSound);
             result.text = text;
             ShowButton();
         }
@@ -44,6 +47,7 @@ public class NightUIManager : MonoBehaviour
         {
             text = "YOU DIED...\nGAME OVER";
             yield return new WaitForSeconds(2);
+            Engine.instance.audioSource.PlayOneShot(deathSound);
             result.text = text;
         }
     }

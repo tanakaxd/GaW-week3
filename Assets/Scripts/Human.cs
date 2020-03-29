@@ -132,7 +132,7 @@ public class Human : MonoBehaviour
             analyzedSympathy += (int)MyRandom.RandomGaussianUnity(EconomyManager.instance.currentPrice[trait]*posOrNega
                 , EconomyManager.instance.currentPrice[trait]*fuzziness*sigmaOnAnalysis);
         }
-        text += "ANALYSIS COMPLETED...\n" + "Analysis Accuracy Level: " + Engine.instance.playerLevel + "\n\n";
+        text +=  "Analysis Accuracy Level: " + Engine.instance.playerLevel + "\n\n";//"ANALYSIS COMPLETED...\n" +
         text += "Extrapolated Life Energy: " + analyzedEnergy + "\n" + "Extrapolated Matter: " + analyzedMatter+"₥\n"
             + "Extrapolated Sympathy: " + analyzedSympathy + "\n";
         text += "Extrapolated Trait:"+"\n";

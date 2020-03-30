@@ -18,10 +18,10 @@ MonoBehaviour:
   type: 0
   rarity: 2
   category: 0
-  traitEnergy: 10
+  traitEnergy: 9
   traitBaseValue: 120
   traitBaseSympathy: 0
   traitValueStretch: 10
-  traitValueVolatility: 1
-  traitOscillationFrequency: 3
+  traitValueVolatility: 5
+  traitOscillationFrequency: 8
   information: you not gross!

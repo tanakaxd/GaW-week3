@@ -18,10 +18,10 @@ MonoBehaviour:
   type: 1
   rarity: 4
   category: 1
-  traitEnergy: 10
+  traitEnergy: 14
   traitBaseValue: 190
   traitBaseSympathy: 0
   traitValueStretch: 5
-  traitValueVolatility: 1
-  traitOscillationFrequency: 5
+  traitValueVolatility: 3
+  traitOscillationFrequency: 6
   information: monstrous or just a monster!

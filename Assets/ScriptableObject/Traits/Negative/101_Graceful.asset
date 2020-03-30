@@ -22,6 +22,6 @@ MonoBehaviour:
   traitBaseValue: 200
   traitBaseSympathy: 0
   traitValueStretch: 3
-  traitValueVolatility: 5
-  traitOscillationFrequency: 2
+  traitValueVolatility: 3
+  traitOscillationFrequency: 6
   information: 

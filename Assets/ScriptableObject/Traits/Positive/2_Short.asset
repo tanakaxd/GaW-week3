@@ -18,10 +18,10 @@ MonoBehaviour:
   type: 1
   rarity: 0
   category: 0
-  traitEnergy: 10
+  traitEnergy: 11
   traitBaseValue: 80
   traitBaseSympathy: 0
   traitValueStretch: 0
-  traitValueVolatility: 2
-  traitOscillationFrequency: 3
+  traitValueVolatility: 6
+  traitOscillationFrequency: 2
   information: 

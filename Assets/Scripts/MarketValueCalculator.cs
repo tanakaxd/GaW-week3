@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class MarketValueCalculator : MonoBehaviour
 {
     public Text marketCapitalizationText;
+    public Text grossWealthText;
+
+    private float marketCapitalization = 0;
+    private float grossWealth = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +30,17 @@ public class MarketValueCalculator : MonoBehaviour
         {
             sum += card.amountOwned * card.currentPrice;
         }
+        marketCapitalization = sum;
         marketCapitalizationText.text = sum.ToString()+"₥";
+
+        CalculateGrossWealth();
+    }
+
+    private void CalculateGrossWealth()
+    {
+        grossWealth = marketCapitalization + Engine.instance.matter;
+        grossWealthText.text = grossWealth.ToString() + "₥";
+
     }
 
     private void OnDisable()

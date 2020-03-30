@@ -9,7 +9,7 @@ public class EconomyManager : MonoBehaviour
     public TraitDataBase traitDataBase;
 
     private List<Trait> traits;
-    private float baseIncrease=0.3f;
+    private float baseIncrease=1f;
     private float upwardProbability=0.7f;
 
     //この部分が冗長？
